@@ -9,6 +9,14 @@ package pieces;
  *
  * @author ahertel
  */
-public class Tour {
+public class Tour extends Piece {
+
+    @Override
+    public void seDeplacer() {
+    }
+
+    @Override
+    public void getDeplacement() {
+    }
     
 }

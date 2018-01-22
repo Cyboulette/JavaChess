@@ -9,6 +9,14 @@ package pieces;
  *
  * @author ahertel
  */
-public class Fou {
+public class Fou extends Piece {
+
+    @Override
+    public void seDeplacer() {
+    }
+
+    @Override
+    public void getDeplacement() {
+    }
     
 }

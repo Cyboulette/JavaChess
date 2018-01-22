@@ -9,6 +9,14 @@ package pieces;
  *
  * @author ahertel
  */
-public class Reine {
+public class Reine extends Piece{
+
+    @Override
+    public void seDeplacer() {
+    }
+
+    @Override
+    public void getDeplacement() {
+    }
     
 }

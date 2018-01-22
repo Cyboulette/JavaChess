@@ -18,6 +18,9 @@ public abstract class Piece {
     public abstract void seDeplacer();       
     
     public abstract void getDeplacement();
+    
+    public abstract boolean canPlay();     
+    
 
     /**
      * @param couleur the couleur to set
