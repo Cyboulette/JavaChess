@@ -5,6 +5,8 @@
  */
 package pieces;
 
+import javachess.Case;
+
 /**
  *
  * @author ahertel
@@ -12,16 +14,16 @@ package pieces;
 public class Tour extends Piece {
 
     @Override
-    public void seDeplacer() {
+    public void seDeplacer(Case destination) {
     }
 
     @Override
-    public void getDeplacement() {
+    public void getDeplacements() {
     }
    
     
     @Override
-    public boolean canPlay() {
+    public boolean canPlay(Case destination, int joueurActuel) {
         return false;
     }
     

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package pieces;
 
 import javachess.Case;
@@ -14,22 +9,21 @@ import javachess.Case;
 public class Cavalier extends Piece{
     
     @Override
-    public void seDeplacer() {
+    public void seDeplacer(Case destination) {
     }
 
     @Override
-    public void getDeplacement() {
+    public void getDeplacements() {
     }
 
     @Override
-    public boolean canPlay(int x, int y) {
+    public boolean canPlay(Case destination, int joueurActuel) {
         Case caseActuelle = this.getCase();
-        Case caseDeplacement = this.getPlateau().getCase(x, y);
         
-        // La case est vide c'est un bon point pour pouvoir jouer dessus
-        /*if(caseDeplacement.isEmpty() && caseDeplacement.getUnePiece().getCouleur() != caseActuelle.getUnePiece().getCouleur()) {
-            if()
-        }*/
+        System.out.println(destination.getPositionX() - caseActuelle.getPositionX());
+        System.out.println(destination.getPositionY() - caseActuelle.getPositionY());
+        
+        return false;
     }
     
 }

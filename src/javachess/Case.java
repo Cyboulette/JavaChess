@@ -26,7 +26,9 @@ public class Case {
     
     public void setUnePiece(Piece unePiece) {
         this.unePiece = unePiece;
-        this.unePiece.setCase(this);
+        if(unePiece != null) {
+            this.unePiece.setCase(this);
+        }
     }
 
     /**

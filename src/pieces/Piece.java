@@ -14,16 +14,16 @@ import javachess.Plateau;
  * @author ahertel
  */
 public abstract class Piece {
-    private int couleur;
+    private int couleur; // 0 = vide, 1 = Blanc, 2 = Noir
     private Case laCase;
     private Plateau plateau;
 
     
-    public abstract void seDeplacer();       
+    public abstract void seDeplacer(Case destination);       
     
-    public abstract void getDeplacement();
+    public abstract void getDeplacements();
     
-    public abstract boolean canPlay();     
+    public abstract boolean canPlay(Case destination, int joueurActuel);     
     
 
     /**

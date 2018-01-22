@@ -20,6 +20,20 @@ public class Plateau {
         lesCases = new ArrayList<Case>();
     }
     
+    public Case getCase(int x, int y) {
+        Case caseTrouvee = null;
+        int i = 0;
+        while(caseTrouvee == null) {
+            Case c = lesCases.get(i);
+            if(c.getPositionX() == x && c.getPositionY() == y) {
+                caseTrouvee = c;
+            }
+            i++;
+        }
+        
+        return caseTrouvee;
+    }
+    
     public void initBoarder(){
         Case uneCase; 
         Tour uneT = new Tour();
@@ -37,44 +51,44 @@ public class Plateau {
                 if(y==1||y==6){
                     if(y==1){
                         unP= new Pion();
-                        unP.setCouleur(1);
+                        unP.setCouleur(2);
                     }
                     if(y==6){
                         unP= new Pion();
-                        unP.setCouleur(0);
+                        unP.setCouleur(1);
                     }
                     uneCase.setUnePiece(unP);                    
                 }
                 if(((x==0)&&(y==0||y==7))||((x == 7)&&(y == 7||y == 0))){
                     if((x==0||x==7) && (y==0)){
                         uneT = new Tour();
-                        uneT.setCouleur(1);
+                        uneT.setCouleur(2);
                     }
                     if((x==0||x==7) && (y==7)){
                         uneT = new Tour();
-                        uneT.setCouleur(0);
+                        uneT.setCouleur(1);
                     }
                     uneCase.setUnePiece(uneT);                    
                 }
                 if(((x==1)&&(y==0||y==7))||((x==6)&&(y == 7|| y == 0))){
                     if((x==1||x==6) && (y==7)){
                         unC = new Cavalier();
-                        unC.setCouleur(0);
+                        unC.setCouleur(1);
                     }
                     if((x==1||x==6) && (y==0)){
                         unC = new Cavalier();
-                        unC.setCouleur(1);
+                        unC.setCouleur(2);
                     }
                     uneCase.setUnePiece(unC);
                 }
                 if(((x==2)&&(y==0||y==7))||((x==5)&&(y == 7|| y ==0))){
                     if((x==2||x==5) && (y==7)){
                         unF = new Fou();
-                        unF.setCouleur(0);
+                        unF.setCouleur(1);
                     }
                     if((x==2||x==5) && (y==0)){
                         unF = new Fou();
-                        unF.setCouleur(1);
+                        unF.setCouleur(2);
                     }
                     uneCase.setUnePiece(unF);
                 }
@@ -82,11 +96,11 @@ public class Plateau {
                         
                     if(y==0){
                         uneR = new Reine();
-                        uneR.setCouleur(1);
+                        uneR.setCouleur(2);
                     }
                     else{
                         uneR = new Reine();
-                        uneR.setCouleur(0);
+                        uneR.setCouleur(1);
                     }
                         
                     uneCase.setUnePiece(uneR);
@@ -95,11 +109,11 @@ public class Plateau {
                     
                     if(y==0){
                         unR = new Roi();
-                        unR.setCouleur(1);
+                        unR.setCouleur(2);
                     }
                     else{
                         unR = new Roi();
-                        unR.setCouleur(0);
+                        unR.setCouleur(1);
                     }
                     uneCase.setUnePiece(unR);
                 }
