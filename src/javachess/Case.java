@@ -15,17 +15,32 @@ public class Case {
         
     }
     
-    public boolean isEmpty(Piece uneP){
+    public boolean isEmpty(){
         return this.unePiece == null;
     }
     
     public Piece getUnePiece(){
         return this.unePiece;
     }
-
+    
+    
     public void setUnePiece(Piece unePiece) {
         this.unePiece = unePiece;
         this.unePiece.setCase(this);
+    }
+
+    /**
+     * @return the positionX
+     */
+    public int getPositionX() {
+        return positionX;
+    }
+
+    /**
+     * @return the positionY
+     */
+    public int getPositionY() {
+        return positionY;
     }
     
 }

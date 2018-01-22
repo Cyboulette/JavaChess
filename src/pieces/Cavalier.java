@@ -5,6 +5,8 @@
  */
 package pieces;
 
+import javachess.Case;
+
 /**
  *
  * @author ahertel
@@ -17,6 +19,15 @@ public class Cavalier extends Piece{
 
     @Override
     public void getDeplacement() {
+    }
+
+    @Override
+    public boolean canPlay() {
+        Case nextCase;
+        
+        if(this.getCouleur()==0){
+            nextCase = new Case(this.getCase().getPositionX(), this.getCase().getPositionY()-2);
+        }
     }
     
 }

@@ -18,5 +18,10 @@ public class Tour extends Piece {
     @Override
     public void getDeplacement() {
     }
+   
+    
+    @Override
+    public boolean canPlay() {
+    }
     
 }
