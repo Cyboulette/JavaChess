@@ -40,7 +40,7 @@ public class Model {
         this.joueurActuel = this.getJoueurSuivant();
     }
     
-    public void play(Piece piece, int i, int j) {
+    /*public void play(Piece piece, int i, int j) {
         if(this.plateau.getCase(i, j).isEmpty()) { // Si la case est libre
             System.out.println("On peut jouer sur la case");
             
@@ -52,7 +52,7 @@ public class Model {
                 System.out.println("Can't Play here");
             }
         }
-    }
+    }*/
     
     /** Observateurs **/
     
@@ -67,11 +67,11 @@ public class Model {
     }
     
     // Avertir tous les observateurs d'un coup à jouer
-    public void avertirAllObservateurs(Piece piece, int i, int j) {
+    /*public void avertirAllObservateurs(Piece piece, int i, int j) {
         for(Observateur o : this.observateurs) {
             o.avertir(piece, i, j);
         }
-    }
+    }*/
     
     // Avertir tous les observateurs d'une fin de partie (échec et math)
     public void avertirFinPartieAllObservateurs(int gagnant) {

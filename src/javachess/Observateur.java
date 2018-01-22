@@ -6,7 +6,7 @@ package javachess;
  */
 public interface Observateur {
     
-    void avertir(Piece piece, int i, int j);
+    //void avertir(Piece piece, int i, int j);
     void avertirNouvellePartie();
     void avertirFinPartie(int gagnant);
 }
