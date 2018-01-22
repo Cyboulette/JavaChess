@@ -12,7 +12,7 @@ import javachess.Case;
  * @author ahertel
  */
 public class Cavalier extends Piece{
-
+    
     @Override
     public void seDeplacer() {
     }
@@ -22,14 +22,14 @@ public class Cavalier extends Piece{
     }
 
     @Override
-    public boolean canPlay() {
-        Case nextCase;
+    public boolean canPlay(int x, int y) {
+        Case caseActuelle = this.getCase();
+        Case caseDeplacement = this.getPlateau().getCase(x, y);
         
-        if(this.getCouleur()==0){
-            nextCase = new Case(this.getCase().getPositionX(), this.getCase().getPositionY()-2);
-        }
-        
-        return false;
+        // La case est vide c'est un bon point pour pouvoir jouer dessus
+        /*if(caseDeplacement.isEmpty() && caseDeplacement.getUnePiece().getCouleur() != caseActuelle.getUnePiece().getCouleur()) {
+            if()
+        }*/
     }
     
 }

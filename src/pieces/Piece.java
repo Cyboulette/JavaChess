@@ -7,6 +7,7 @@ package pieces;
 
 import java.awt.Color;
 import javachess.Case;
+import javachess.Plateau;
 
 /**
  *
@@ -15,6 +16,7 @@ import javachess.Case;
 public abstract class Piece {
     private int couleur;
     private Case laCase;
+    private Plateau plateau;
 
     
     public abstract void seDeplacer();       
@@ -41,6 +43,14 @@ public abstract class Piece {
     
     public Case getCase() {
         return this.laCase;
+    }
+    
+    public void setPlateau(Plateau plateau) {
+        this.plateau = plateau;
+    }
+    
+    public Plateau getPlateau() {
+        return this.plateau;
     }
         
     
