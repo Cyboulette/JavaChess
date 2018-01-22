@@ -18,5 +18,10 @@ public class Reine extends Piece{
     @Override
     public void getDeplacement() {
     }
+
+    @Override
+    public boolean canPlay() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

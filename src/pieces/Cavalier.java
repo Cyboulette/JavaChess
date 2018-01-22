@@ -28,6 +28,8 @@ public class Cavalier extends Piece{
         if(this.getCouleur()==0){
             nextCase = new Case(this.getCase().getPositionX(), this.getCase().getPositionY()-2);
         }
+        
+        return false;
     }
     
 }

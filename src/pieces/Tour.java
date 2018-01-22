@@ -22,6 +22,7 @@ public class Tour extends Piece {
     
     @Override
     public boolean canPlay() {
+        return false;
     }
     
 }
