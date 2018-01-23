@@ -60,7 +60,7 @@ public class VueGraphiqueController extends AbstractVueGraphiqueController imple
                             imageClicked = source.getImage();
                             ColorAdjust effect = new ColorAdjust();
                             effect.setSaturation(1);
-                            effect.setHue(0.5);
+                            effect.setHue(1);
                             if(caseC.getUnePiece().getCouleur() == 1) effect.setBrightness(-0.5);
                             if(caseC.getUnePiece().getCouleur() == 2) effect.setBrightness(0.5);
                             source.setEffect(effect);
