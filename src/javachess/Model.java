@@ -53,7 +53,7 @@ public class Model {
                 aMange = true;
             }
             
-            System.out.println(destination.getPositionX()+";"+destination.getPositionY());
+            //System.out.println(destination.getPositionX()+";"+destination.getPositionY());
             
             destination.setUnePiece(piece); // On indique à la case quelle est la nouvelle pièce
             piece.seDeplacer(destination); // On indique à la pièce ou se déplacer

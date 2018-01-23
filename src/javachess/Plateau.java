@@ -45,7 +45,7 @@ public class Plateau {
         
         for(int x=0; x < 8; x++){
             for(int y =0; y < 8; y++){
-                uneCase = new Case(x, y);
+                uneCase = new Case(x, y, this);
                 lesCases.add(uneCase);
                 
                 if(y==1||y==6){

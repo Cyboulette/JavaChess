@@ -7,12 +7,13 @@ public class Case {
     private int positionX;
     private int positionY;
     private Piece unePiece;
+    private Plateau plateau;
     
-    public Case(int x, int y){
+    public Case(int x, int y, Plateau plateau){
         positionX = x;
         positionY = y;
         unePiece = null;
-        
+        this.plateau = plateau;
     }
     
     public boolean isEmpty(){
@@ -45,4 +46,7 @@ public class Case {
         return positionY;
     }
     
+    public Plateau getPlateau() {
+        return this.plateau;
+    }
 }

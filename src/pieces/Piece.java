@@ -16,8 +16,6 @@ import javachess.Plateau;
 public abstract class Piece {
     private int couleur; // 0 = vide, 1 = Blanc, 2 = Noir
     private Case laCase;
-    private Plateau plateau;
-
     
     public abstract void seDeplacer(Case destination);       
     
@@ -43,14 +41,6 @@ public abstract class Piece {
     
     public Case getCase() {
         return this.laCase;
-    }
-    
-    public void setPlateau(Plateau plateau) {
-        this.plateau = plateau;
-    }
-    
-    public Plateau getPlateau() {
-        return this.plateau;
     }
         
     
