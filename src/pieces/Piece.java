@@ -6,6 +6,7 @@
 package pieces;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import javachess.Case;
 import javachess.Plateau;
 
@@ -17,16 +18,31 @@ public abstract class Piece {
     private int couleur; // 0 = vide, 1 = Blanc, 2 = Noir
     private Case laCase;
     
-    public abstract void seDeplacer(Case destination);       
+    public abstract boolean canPlay(Case destination, int joueurActuel);
     
-    public abstract void getDeplacements();
+    public abstract String toString();
     
-    public abstract boolean canPlay(Case destination, int joueurActuel);     
+    public ArrayList<Case> getDeplacements(int joueurActuel) {
+        ArrayList<Case> deplacements = new ArrayList<Case>();
+        Plateau plateau = this.getCase().getPlateau();
+        for(int i = 0; i<8; i++) {
+            for(int j = 0; j<8; j++) {
+                Case c = plateau.getCase(i, j);
+                if(canPlay(c, joueurActuel)) {
+                    if(!deplacements.contains(c)) {
+                        deplacements.add(c);
+                    }
+                }
+            }
+        }
+        
+        return deplacements;
+    }
     
+    public void seDeplacer(Case destination) {
+        this.setCase(destination);
+    }
 
-    /**
-     * @param couleur the couleur to set
-     */
     public void setCouleur(int couleur) {
         this.couleur = couleur;
     }
@@ -42,6 +58,4 @@ public abstract class Piece {
     public Case getCase() {
         return this.laCase;
     }
-        
-    
 }

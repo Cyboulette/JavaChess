@@ -1,6 +1,7 @@
 package javachess;
 
-import pieces.Piece;
+import java.util.ArrayList;
+import pieces.*;
 
 /**
  *
@@ -33,6 +34,10 @@ public class Controller {
         }
     }
     
+    public ArrayList<Case> getDeplacements(Piece piece) {
+        return piece.getDeplacements(this.getJoueurActuel());
+    }
+    
     public void nouvellePartie() {
         this.modele.nouvellePartie();
     }
@@ -43,5 +48,55 @@ public class Controller {
     
     public int getJoueurSuivant() {
         return this.modele.getJoueurSuivant();
+    }
+    
+    public String getEtatJeu() {
+        String retour = "";
+        ArrayList<Piece> piecesBlanc = new ArrayList<Piece>();
+        ArrayList<Piece> piecesNoir = new ArrayList<Piece>();
+        ArrayList<Case> lesCases = this.modele.getPlateau().getLesCases();
+        for(Case c : lesCases) {
+            if(!c.isEmpty()) {
+                Piece p = c.getUnePiece();
+                if(p.getCouleur() == 1 && !piecesBlanc.contains(p)) piecesBlanc.add(p);
+                if(p.getCouleur() == 2 && !piecesNoir.contains(p)) piecesNoir.add(p);
+            }
+        }
+        System.out.println(piecesBlanc.size()+" pièces blanches totales");
+        System.out.println(piecesNoir.size()+" pièces noires totales");
+        int nbPionsBlancs = 0;
+        int nbPionsNoirs = 0;
+        int nbToursBlancs = 0;
+        int nbToursNoirs = 0;
+        int nbReineBlanc = 0;
+        int nbReineNoir = 0;
+        int nbRoiBlanc = 0;
+        int nbRoiNoir = 0;
+        int nbFousBlancs = 0;
+        int nbFousNoirs = 0;
+        int nbCavaliersBlancs = 0;
+        int nbCavaliersNoirs = 0;
+        
+        for(Piece p : piecesBlanc) {
+            if(p instanceof Pion) nbPionsBlancs++;
+            if(p instanceof Cavalier) nbCavaliersBlancs++;
+            if(p instanceof Fou) nbFousBlancs++;
+            if(p instanceof Roi) nbRoiBlanc++;
+            if(p instanceof Reine) nbReineBlanc++;
+            if(p instanceof Tour) nbToursBlancs++;
+        }
+        
+        for(Piece p : piecesNoir) {
+            if(p instanceof Pion) nbPionsNoirs++;
+            if(p instanceof Cavalier) nbCavaliersNoirs++;
+            if(p instanceof Fou) nbFousNoirs++;
+            if(p instanceof Roi) nbRoiNoir++;
+            if(p instanceof Reine) nbReineNoir++;
+            if(p instanceof Tour) nbToursNoirs++;
+        }
+        retour = "Blancs = \nPions : "+nbPionsBlancs+"\nCavaliers : "+nbCavaliersBlancs+"\nFous : "+nbFousBlancs+"\nTours : "+nbToursBlancs+"\nRoi : "+nbRoiBlanc+"\nReine : "+nbReineBlanc;
+        retour += "\n\nNoirs = \nPions : "+nbPionsNoirs+"\nCavaliers : "+nbCavaliersNoirs+"\nFous : "+nbFousNoirs+"\nTours : "+nbToursNoirs+"\nRoi : "+nbRoiNoir+"\nReine : "+nbReineNoir;
+        
+        return retour;
     }
 }

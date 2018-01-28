@@ -5,6 +5,7 @@
  */
 package pieces;
 
+import java.util.ArrayList;
 import javachess.Case;
 
 /**
@@ -18,12 +19,12 @@ public class Roi extends Piece{
     }
 
     @Override
-    public void getDeplacements() {
-    }
-
-    @Override
     public boolean canPlay(Case destination, int joueurActuel) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
+    @Override
+    public String toString() {
+        return "Roi";
+    }
 }

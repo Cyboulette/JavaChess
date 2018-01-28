@@ -125,4 +125,8 @@ public class Plateau {
 
     }
     
+    public ArrayList<Case> getLesCases() {
+        return this.lesCases;
+    }
+    
 }
