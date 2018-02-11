@@ -14,15 +14,34 @@ import javachess.Case;
  */
 public class Roi extends Piece{
 
-    @Override
-    public void seDeplacer(Case destination) {
-    }
 
     @Override
     public boolean canPlay(Case destination, int joueurActuel) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Case caseActuelle = this.getCase();  // On récupère la case actuelle
+        int differencePosY = Math.abs(caseActuelle.getPositionY() - destination.getPositionY()); // On récupère la distance peu importe le sens
+        int differencePosX = Math.abs(caseActuelle.getPositionX() - destination.getPositionX()); // On récupère la distance peu importe le sens
+                
+        if((differencePosX <= 1)&&(differencePosY <= 1))
+            {
+            if(destination.isEmpty()){
+                return true;
+            }
+            else{
+                if(destination.getUnePiece().getCouleur() != joueurActuel){
+                    return true;
+                }
+                else
+                    return false;
+                }            
+            }
+            else{
+                return false;
+                }            
     }
     
+    public boolean isThreatenedCase(ArrayList cases, int joueurActuel){
+        return true;
+    }
     @Override
     public String toString() {
         return "Roi";
