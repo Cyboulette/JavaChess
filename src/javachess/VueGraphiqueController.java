@@ -409,20 +409,29 @@ public class VueGraphiqueController extends AbstractVueGraphiqueController imple
     }
 
     @Override
-    public void avertir(Piece piece, Case source, Case destination, Boolean aMange) {
+    public void avertir(Piece piece, Case source, Case destination, Boolean aDisparu) {
         ImageView imgSource = this.getImageViewAtCoord(source.getPositionX(), source.getPositionY());
         ImageView imgDestination = this.getImageViewAtCoord(destination.getPositionX(), destination.getPositionY());
-        if(imgSource != null & imgDestination != null) {
-            imgDestination.setImage(imgSource.getImage());
+        if(aDisparu) {
             imgSource.setImage(null);
             imgSource.setEffect(null);
             resetCasesEffect();
             this.isPieceClicked = false;
             this.pieceClicked = null;
             this.imageClicked = null;
+        } else {
+            if(imgSource != null & imgDestination != null) {
+                imgDestination.setImage(imgSource.getImage());
+                imgSource.setImage(null);
+                imgSource.setEffect(null);
+                resetCasesEffect();
+                this.isPieceClicked = false;
+                this.pieceClicked = null;
+                this.imageClicked = null;
+            }
         }
         // Commenter cette ligne pour arrêter de voir l'état du jeu
-        System.out.println(this.controller.getEtatJeu());
+        // System.out.println(this.controller.getEtatJeu());
     }
 
     @Override

@@ -7,13 +7,21 @@ package pieces;
 
 import java.util.ArrayList;
 import javachess.Case;
+import javachess.Plateau;
 
 /**
  *
  * @author ahertel
  */
 public class Roi extends Piece{
+    private boolean alreadyPlay = false;    
 
+    
+    @Override
+    public void seDeplacer(Case destination) {
+        alreadyPlay = true;
+        this.setCase(destination);
+    }
 
     @Override
     public boolean canPlay(Case destination, int joueurActuel) {
@@ -40,6 +48,40 @@ public class Roi extends Piece{
         return true;
     }
     
+    public boolean canRoque(Case actuelle, Case destination) {
+        int start = 0, end = 0;
+        Plateau plateau = this.getCase().getPlateau();
+        boolean isMovementX = true, caseWithPieceFound = false;
+        
+        if(actuelle.getPositionX() != destination.getPositionX()) {
+            start = Math.min(actuelle.getPositionX(), destination.getPositionX());
+            end = Math.max(actuelle.getPositionX(), destination.getPositionX());
+            isMovementX = true;
+        } else if(actuelle.getPositionY() != destination.getPositionY()) {
+            isMovementX = false;
+        }
+        
+        if(!alreadyPlay){
+            if(isMovementX){
+                int differenceX = Math.abs(actuelle.getPositionX() - destination.getPositionX());
+                differenceX--;
+                
+                if(differenceX <= 3 && differenceX >= 2 ){
+                    for(int i = start; i <= end; i++){
+                        Case c = plateau.getCase(i, actuelle.getPositionY());
+                            if(!c.isEmpty() && !c.equals(actuelle) && !c.equals(destination)) {
+                                caseWithPieceFound = true;
+                            }
+                    }
+                    return !caseWithPieceFound;                    
+                }
+                else return false;
+            }
+            else return false;
+        }
+        else return false;
+    }
+
     @Override
     public String toString() {
         return "Roi";

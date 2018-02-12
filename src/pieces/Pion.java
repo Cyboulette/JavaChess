@@ -10,6 +10,7 @@ import javachess.Plateau;
  */
 public class Pion extends Piece{
     private boolean alreadyPlay = false;
+    private boolean firstDeplacementIsTwo = false;
     
     @Override
     public void seDeplacer(Case destination) {
@@ -38,13 +39,30 @@ public class Pion extends Piece{
             return false;
         }
     }
-
+    
+    public boolean canPrisePassant(Case caseGD, Case destination, int joueurActuel) {
+        if(((joueurActuel == 1 && destination.getPositionY() == caseGD.getPositionY()-1) ||
+            (joueurActuel == 2 && destination.getPositionY() == caseGD.getPositionY()+1)) && 
+            destination.getPositionX() == caseGD.getPositionX()) {
+            Pion pion = (Pion) caseGD.getUnePiece();
+            return pion.getFirstDeplacementIsTwo();
+        } else {
+            return false;
+        }
+    }
+    
     @Override
     public boolean canPlay(Case destination, int joueurActuel) {
         Case caseActuelle = this.getCase(); // On récupère la case actuelle
         int differencePos = Math.abs(caseActuelle.getPositionY() - destination.getPositionY()); // On récupère la distance peu importe le sens
         int maxX = 2; // Si on a jamais joué on peut faire 1 ou 2
         if(alreadyPlay) maxX = 1; // Si on a déjà joué, le maximum est de 1
+        
+        if(maxX == 2 && !alreadyPlay) {
+            firstDeplacementIsTwo = true;
+        } else {
+            firstDeplacementIsTwo = false;
+        }
         
         // Si la destination est vide (case vide) et qu'on change de colonne (diagonale ou autre), on empèche de jouer
         if(destination.isEmpty() && destination.getPositionX() != caseActuelle.getPositionX()) {
@@ -86,5 +104,9 @@ public class Pion extends Piece{
     @Override
     public String toString() {
         return "Pion";
+    }
+    
+    public boolean getFirstDeplacementIsTwo() {
+        return this.firstDeplacementIsTwo;
     }
 }

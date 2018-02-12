@@ -61,6 +61,41 @@ public class Model {
         }
     }
     
+    public void doRoque(Case caseRoi, Case caseTour) {
+        Piece roi = caseRoi.getUnePiece();
+        Piece tour = caseTour.getUnePiece();
+        int differenceX = Math.abs(caseRoi.getPositionX() - caseTour.getPositionX())-1;
+        Case arriveeRoi = null, arriveeTour = null;
+        
+        if(differenceX == 2) {
+            arriveeRoi = this.plateau.getCase(caseRoi.getPositionX()+2, caseRoi.getPositionY());
+            arriveeTour = this.plateau.getCase(caseTour.getPositionX()-2, caseRoi.getPositionY());
+        } else if(differenceX == 3) {
+            arriveeRoi = this.plateau.getCase(caseRoi.getPositionX()-3, caseRoi.getPositionY());
+            arriveeTour = this.plateau.getCase(caseTour.getPositionX()+2, caseRoi.getPositionY());
+        }
+        
+        arriveeRoi.setUnePiece(roi);
+        arriveeTour.setUnePiece(tour);
+        roi.seDeplacer(arriveeRoi);
+        tour.seDeplacer(arriveeTour);
+        this.avertirAllObservateurs(roi, caseRoi, arriveeRoi, Boolean.FALSE);
+        this.avertirAllObservateurs(tour, caseTour, arriveeTour, Boolean.FALSE);
+        caseRoi.setUnePiece(null);
+        caseTour.setUnePiece(null);
+        this.changerJoueur();
+    }
+    
+    public void prisePassant(Case caseToEat, Case destination, Piece piece) {
+        Case source = piece.getCase();
+        destination.setUnePiece(piece);
+        piece.seDeplacer(destination);
+        this.avertirAllObservateurs(piece, source, destination, Boolean.FALSE);
+        this.avertirAllObservateurs(caseToEat.getUnePiece(), caseToEat, destination, Boolean.TRUE);
+        caseToEat.setUnePiece(null);
+        this.changerJoueur();
+    }
+    
     public void nouvellePartie() {
         this.plateau = new Plateau();
         this.plateau.initBoarder();
@@ -81,9 +116,9 @@ public class Model {
     }
     
     // Avertir tous les observateurs d'un coup à jouer
-    public void avertirAllObservateurs(Piece piece, Case source, Case destination, Boolean aMange) {
+    public void avertirAllObservateurs(Piece piece, Case source, Case destination, Boolean aDisparu) {
         for(Observateur o : this.observateurs) {
-            o.avertir(piece, source, destination, aMange);
+            o.avertir(piece, source, destination, aDisparu);
         }
     }
     

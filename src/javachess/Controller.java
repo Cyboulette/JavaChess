@@ -26,11 +26,50 @@ public class Controller {
         
         canPlay = piece.canPlay(destination, this.getJoueurActuel());
         
+        if(piece instanceof Roi) {
+            Roi roi = (Roi) piece;
+            if(!destination.isEmpty() && destination.getUnePiece() instanceof Tour) {
+                if(piece.getCouleur() == destination.getUnePiece().getCouleur()) {
+                    if(roi.canRoque(piece.getCase(), destination)) {
+                        this.modele.doRoque(piece.getCase(), destination);
+                        canPlay = false;
+                    }
+                }
+            }
+        }
+        
+        if(piece instanceof Pion){
+            if(destination.isEmpty()){
+                Case caseActuelle = piece.getCase();
+                Case caseGauche = null;
+                Case caseDroite = null;
+                if(caseActuelle.getPositionX() != 0) caseGauche = this.getCase(caseActuelle.getPositionX()-1, caseActuelle.getPositionY());
+                if(caseActuelle.getPositionX() != 7) caseDroite = this.getCase(caseActuelle.getPositionX()+1, caseActuelle.getPositionY());
+                
+                if(caseGauche != null && !caseGauche.isEmpty()) {
+                    if(caseGauche.getUnePiece() instanceof Pion) {
+                        Pion pion = (Pion) caseGauche.getUnePiece();
+                        if(pion.canPrisePassant(caseGauche, destination, this.getJoueurActuel())) {
+                            this.modele.prisePassant(caseGauche, destination, piece);
+                            canPlay = false;
+                        }
+                    }
+                }
+                
+                if(caseDroite != null && !caseDroite.isEmpty()) {
+                    if(caseDroite.getUnePiece() instanceof Pion) {
+                        Pion pion = (Pion) caseDroite.getUnePiece();
+                        if(pion.canPrisePassant(caseDroite, destination, this.getJoueurActuel())) {
+                            this.modele.prisePassant(caseDroite, destination, piece);
+                            canPlay = false;
+                        }
+                    }
+                }
+            }
+        }
+        
         if(canPlay) {
             this.modele.play(piece, destination);
-            //this.modele.avertirAllObservateurs(piece, destination); C'est au modèle d'avertir la vue
-        } else {
-            System.out.println("Vous ne pouvez pas jouer ici");
         }
     }
     
