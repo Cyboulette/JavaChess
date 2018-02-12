@@ -21,27 +21,25 @@ public class Roi extends Piece{
         int differencePosY = Math.abs(caseActuelle.getPositionY() - destination.getPositionY()); // On récupère la distance peu importe le sens
         int differencePosX = Math.abs(caseActuelle.getPositionX() - destination.getPositionX()); // On récupère la distance peu importe le sens
                 
-        if((differencePosX <= 1)&&(differencePosY <= 1))
-            {
+        if((differencePosX <= 1)&&(differencePosY <= 1)) {
             if(destination.isEmpty()){
                 return true;
-            }
-            else{
-                if(destination.getUnePiece().getCouleur() != joueurActuel){
+            } else {
+                if(destination.getUnePiece().getCouleur() != joueurActuel) {
                     return true;
-                }
-                else
+                } else {
                     return false;
-                }            
+                }
             }
-            else{
-                return false;
-                }            
+        } else {
+            return false;
+        }
     }
     
     public boolean isThreatenedCase(ArrayList cases, int joueurActuel){
         return true;
     }
+    
     @Override
     public String toString() {
         return "Roi";
