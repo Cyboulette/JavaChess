@@ -18,6 +18,18 @@ public class Controller {
         return this.modele.getPlateau().getCase(x, y);
     }
     
+    public boolean needToPromote(Piece piece, Case destination) {
+        if(piece instanceof Pion) {
+            if((this.getJoueurActuel() == 1 && destination.getPositionY() == 0) || (this.getJoueurActuel() == 2 && destination.getPositionY() == 7)) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+    
     public void play(Piece piece, Case destination) {
         boolean canPlay = true;
         if(!destination.isEmpty() && destination.getUnePiece().getCouleur() == piece.getCouleur()) {
@@ -71,6 +83,10 @@ public class Controller {
         if(canPlay) {
             this.modele.play(piece, destination);
         }
+    }
+    
+    public void promote(Case destination, Piece piece) {
+        destination.setUnePiece(piece);
     }
     
     public ArrayList<Case> getDeplacements(Piece piece) {
@@ -136,6 +152,6 @@ public class Controller {
         retour = "Blancs = \nPions : "+nbPionsBlancs+"\nCavaliers : "+nbCavaliersBlancs+"\nFous : "+nbFousBlancs+"\nTours : "+nbToursBlancs+"\nRoi : "+nbRoiBlanc+"\nReine : "+nbReineBlanc;
         retour += "\n\nNoirs = \nPions : "+nbPionsNoirs+"\nCavaliers : "+nbCavaliersNoirs+"\nFous : "+nbFousNoirs+"\nTours : "+nbToursNoirs+"\nRoi : "+nbRoiNoir+"\nReine : "+nbReineNoir;
         
-        return retour;
+        return null;
     }
 }

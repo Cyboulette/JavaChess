@@ -1,5 +1,6 @@
 package javachess;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -7,15 +8,23 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
+import pieces.Cavalier;
+import pieces.Fou;
 import pieces.Piece;
+import pieces.Reine;
+import pieces.Tour;
 
 /**
  *
@@ -93,13 +102,54 @@ public class VueGraphiqueController extends AbstractVueGraphiqueController imple
                 resetCasesEffect();
             } else {
                 // On clique sur une autre pièce que nous, on essaie de jouer (et de manger ?)
+                if(this.controller.needToPromote(pieceClicked, caseC)) {
+                    try {
+                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("PromotionPion.fxml"));     
+                        Parent root = (Parent)fxmlLoader.load(); 
+                        PromotionPionController pionController = fxmlLoader.<PromotionPionController>getController();
+                        pionController.setJoueurActuel(this.controller.getJoueurActuel());
+                        pionController.updateImages();
+                        pionController.setParentController(this);
+                        
+                        Stage stage = new Stage();
+                        stage.setTitle("Promotion d'un pion");
+                        stage.setScene(new Scene(root, 350, 200));
+                        stage.show();
+                        pionController.setStage(stage);
+                        pionController.setCurrentPiece(pieceClicked);
+                        pionController.setCase(caseC);
+                        pionController.setImageViewSource(source);
+                    } catch(IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }
                 this.controller.play(pieceClicked, caseC);
             }
         }
     }
     
+    public void promotePiece(String piece, PromotionPionController pionController) {
+        if(piece.equals("fou")) {
+            pieceClicked = new Fou();
+        } else if(piece.equals("cavalier")) {
+            pieceClicked = new Cavalier();
+        } else if(piece.equals("reine")) {
+            pieceClicked = new Reine();
+        } else if(piece.equals("tour")) {
+            pieceClicked = new Tour();
+        }
+        
+        pieceClicked.setCouleur(pionController.getJoueurActuel());
+        String sJ = null;
+        if(pionController.getJoueurActuel() == 1) sJ = "B";
+        if(pionController.getJoueurActuel() == 2) sJ = "N";
+        pionController.getImageViewSource().setImage(new Image(piece+sJ+".png"));
+        this.controller.promote(pionController.getCase(), pieceClicked);
+        pionController.getStage().close();
+    }
+    
     private void onClickCase(MouseEvent e) {
-        if(isPieceClicked) {
+        /*if(isPieceClicked) {
             if(e.getSource() instanceof ImageView) {
                 ImageView source = (ImageView) e.getSource();
                 String typeCase = source.getUserData().toString();
@@ -108,7 +158,7 @@ public class VueGraphiqueController extends AbstractVueGraphiqueController imple
                     this.controller.play(pieceClicked, caseC);
                 }
             }
-        }
+        }*/
     }
     
     @Override
