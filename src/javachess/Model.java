@@ -91,8 +91,9 @@ public class Model {
         destination.setUnePiece(piece);
         piece.seDeplacer(destination);
         this.avertirAllObservateurs(piece, source, destination, Boolean.FALSE);
-        this.avertirAllObservateurs(caseToEat.getUnePiece(), caseToEat, destination, Boolean.TRUE);
+        this.avertirAllObservateursDisparition(caseToEat.getUnePiece(), caseToEat, destination);
         caseToEat.setUnePiece(null);
+        source.setUnePiece(null);
         this.changerJoueur();
     }
     
@@ -116,9 +117,16 @@ public class Model {
     }
     
     // Avertir tous les observateurs d'un coup à jouer
-    public void avertirAllObservateurs(Piece piece, Case source, Case destination, Boolean aDisparu) {
+    public void avertirAllObservateurs(Piece piece, Case source, Case destination, Boolean aMange) {
         for(Observateur o : this.observateurs) {
-            o.avertir(piece, source, destination, aDisparu);
+            o.avertir(piece, source, destination, aMange);
+        }
+    }
+    
+    // Avertir tous les observateurs qu'une pièce a disparue
+    public void avertirAllObservateursDisparition(Piece piece, Case source, Case destination) {
+        for(Observateur o : this.observateurs) {
+            o.avertirDisparition(piece, source, destination);
         }
     }
     

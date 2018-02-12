@@ -15,11 +15,14 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.effect.ColorAdjust;
+import javafx.scene.effect.ImageInput;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import pieces.Cavalier;
 import pieces.Fou;
 import pieces.Piece;
@@ -83,7 +86,12 @@ public class VueGraphiqueController extends AbstractVueGraphiqueController imple
                                 effectCaseAvaiable.setContrast(0.2);
                                 for(Case c : deplacements) {
                                     ImageView caseImgView = this.getCaseImageViewAtCoord(c.getPositionX(), c.getPositionY());
-                                    caseImgView.setEffect(effectCaseAvaiable);
+                                    //caseImgView.setEffect(effectCaseAvaiable);
+                                    if(caseImgView.getUserData().equals("blanche")) {
+                                        caseImgView.setEffect(new ImageInput(new Image("case_verte_1.png")));
+                                    } else if(caseImgView.getUserData().equals("noire")) {
+                                        caseImgView.setEffect(new ImageInput(new Image("case_verte_2.png")));
+                                    }
                                 }
                             }
                     }
@@ -102,28 +110,45 @@ public class VueGraphiqueController extends AbstractVueGraphiqueController imple
                 resetCasesEffect();
             } else {
                 // On clique sur une autre pièce que nous, on essaie de jouer (et de manger ?)
-                if(this.controller.needToPromote(pieceClicked, caseC)) {
+                Piece savePieceClicked = pieceClicked;
+                int joueur = this.controller.getJoueurActuel();
+                boolean havePlayed = this.controller.play(pieceClicked, caseC);
+                if(havePlayed && this.controller.needToPromote(savePieceClicked, caseC, joueur)) {
                     try {
+                        // On charge la vue de promotion de pièce
                         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("PromotionPion.fxml"));     
                         Parent root = (Parent)fxmlLoader.load(); 
+                        // On récupère le controlleur du pion
                         PromotionPionController pionController = fxmlLoader.<PromotionPionController>getController();
-                        pionController.setJoueurActuel(this.controller.getJoueurActuel());
-                        pionController.updateImages();
-                        pionController.setParentController(this);
+                        pionController.setJoueurActuel(joueur); // On met le joueur actuel
+                        pionController.updateImages(); // On met à jour les images
+                        pionController.setParentController(this); // On passe le controlleur parent
                         
                         Stage stage = new Stage();
                         stage.setTitle("Promotion d'un pion");
-                        stage.setScene(new Scene(root, 350, 200));
-                        stage.show();
-                        pionController.setStage(stage);
-                        pionController.setCurrentPiece(pieceClicked);
-                        pionController.setCase(caseC);
-                        pionController.setImageViewSource(source);
+                        Scene scene = new Scene(root, 350, 200);
+                        stage.setScene(scene);
+
+                        pionController.setStage(stage); // On passe le stage/scene vue courante
+                        pionController.setCurrentPiece(pieceClicked); // La pièce cliquée
+                        pionController.setCase(caseC); // La case cliquée
+                        pionController.setImageViewSource(source); // Et l'image view source
+                        
+                        // On bloque le fait de fermer la fenêtre, on doit forcer l'utilisateur à choisir une nouvelle pièce
+                        scene.getWindow().setOnCloseRequest(new EventHandler<WindowEvent>() {
+                            public void handle(WindowEvent ev) {
+                                ev.consume();
+                            }
+                        });
+                        
+                        // On utilise une modale qui va bloquer le jeu en attendant qu'elle soit fermée
+                        stage.initModality(Modality.APPLICATION_MODAL);
+                        // On force l'affichage de la modale
+                        stage.showAndWait();
                     } catch(IOException ex) {
                         ex.printStackTrace();
                     }
                 }
-                this.controller.play(pieceClicked, caseC);
             }
         }
     }
@@ -353,7 +378,7 @@ public class VueGraphiqueController extends AbstractVueGraphiqueController imple
                 
                 if(((x==4)&&(y==0||y==7))){
                     if(y==0){
-                        ImageView imgV = new ImageView(reineN);
+                        ImageView imgV = new ImageView(roiN);
                         imgV.setFitHeight(44);
                         imgV.setFitWidth(44);
                         imgV.setLayoutX(x*44);
@@ -364,7 +389,7 @@ public class VueGraphiqueController extends AbstractVueGraphiqueController imple
                         contentCases.getChildren().add(imgV);
                     }
                     else{
-                        ImageView imgV = new ImageView(reineB);
+                        ImageView imgV = new ImageView(roiB);
                         imgV.setFitHeight(44);
                         imgV.setFitWidth(44);
                         imgV.setLayoutX(x*44);
@@ -378,7 +403,7 @@ public class VueGraphiqueController extends AbstractVueGraphiqueController imple
                 
                 if(((x==3)&&(y==0||y==7))){
                     if(y==0){
-                        ImageView imgV = new ImageView(roiN);
+                        ImageView imgV = new ImageView(reineN);
                         imgV.setFitHeight(44);
                         imgV.setFitWidth(44);
                         imgV.setLayoutX(x*44);
@@ -389,7 +414,7 @@ public class VueGraphiqueController extends AbstractVueGraphiqueController imple
                         contentCases.getChildren().add(imgV);
                     }
                     else{
-                        ImageView imgV = new ImageView(roiB);
+                        ImageView imgV = new ImageView(reineB);
                         imgV.setFitHeight(44);
                         imgV.setFitWidth(44);
                         imgV.setLayoutX(x*44);
@@ -459,29 +484,30 @@ public class VueGraphiqueController extends AbstractVueGraphiqueController imple
     }
 
     @Override
-    public void avertir(Piece piece, Case source, Case destination, Boolean aDisparu) {
+    public void avertir(Piece piece, Case source, Case destination, Boolean aMange) {
         ImageView imgSource = this.getImageViewAtCoord(source.getPositionX(), source.getPositionY());
         ImageView imgDestination = this.getImageViewAtCoord(destination.getPositionX(), destination.getPositionY());
-        if(aDisparu) {
+        if(imgSource != null & imgDestination != null) {
+            imgDestination.setImage(imgSource.getImage());
             imgSource.setImage(null);
             imgSource.setEffect(null);
             resetCasesEffect();
             this.isPieceClicked = false;
             this.pieceClicked = null;
             this.imageClicked = null;
-        } else {
-            if(imgSource != null & imgDestination != null) {
-                imgDestination.setImage(imgSource.getImage());
-                imgSource.setImage(null);
-                imgSource.setEffect(null);
-                resetCasesEffect();
-                this.isPieceClicked = false;
-                this.pieceClicked = null;
-                this.imageClicked = null;
-            }
         }
         // Commenter cette ligne pour arrêter de voir l'état du jeu
         // System.out.println(this.controller.getEtatJeu());
+    }
+    
+    @Override
+    public void avertirDisparition(Piece piece, Case source, Case destination) {
+        ImageView imgSource = this.getImageViewAtCoord(source.getPositionX(), source.getPositionY());
+        imgSource.setImage(null);
+        imgSource.setEffect(null);
+        this.isPieceClicked = false;
+        this.pieceClicked = null;
+        this.imageClicked = null;
     }
 
     @Override

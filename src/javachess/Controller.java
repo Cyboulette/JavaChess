@@ -18,9 +18,9 @@ public class Controller {
         return this.modele.getPlateau().getCase(x, y);
     }
     
-    public boolean needToPromote(Piece piece, Case destination) {
+    public boolean needToPromote(Piece piece, Case destination, int joueur) {
         if(piece instanceof Pion) {
-            if((this.getJoueurActuel() == 1 && destination.getPositionY() == 0) || (this.getJoueurActuel() == 2 && destination.getPositionY() == 7)) {
+            if((joueur == 1 && destination.getPositionY() == 0) || (joueur == 2 && destination.getPositionY() == 7)) {
                 return true;
             } else {
                 return false;
@@ -30,8 +30,9 @@ public class Controller {
         }
     }
     
-    public void play(Piece piece, Case destination) {
+    public boolean play(Piece piece, Case destination) {
         boolean canPlay = true;
+        boolean havePlayed = false;
         if(!destination.isEmpty() && destination.getUnePiece().getCouleur() == piece.getCouleur()) {
             canPlay = false;
         }
@@ -44,6 +45,7 @@ public class Controller {
                 if(piece.getCouleur() == destination.getUnePiece().getCouleur()) {
                     if(roi.canRoque(piece.getCase(), destination)) {
                         this.modele.doRoque(piece.getCase(), destination);
+                        havePlayed = true;
                         canPlay = false;
                     }
                 }
@@ -63,6 +65,7 @@ public class Controller {
                         Pion pion = (Pion) caseGauche.getUnePiece();
                         if(pion.canPrisePassant(caseGauche, destination, this.getJoueurActuel())) {
                             this.modele.prisePassant(caseGauche, destination, piece);
+                            havePlayed = true;
                             canPlay = false;
                         }
                     }
@@ -73,6 +76,7 @@ public class Controller {
                         Pion pion = (Pion) caseDroite.getUnePiece();
                         if(pion.canPrisePassant(caseDroite, destination, this.getJoueurActuel())) {
                             this.modele.prisePassant(caseDroite, destination, piece);
+                            havePlayed = true;
                             canPlay = false;
                         }
                     }
@@ -81,8 +85,11 @@ public class Controller {
         }
         
         if(canPlay) {
+            havePlayed = true;
             this.modele.play(piece, destination);
         }
+        
+        return havePlayed;
     }
     
     public void promote(Case destination, Piece piece) {
