@@ -61,7 +61,7 @@ public class Controller {
                 if(caseActuelle.getPositionX() != 7) caseDroite = this.getCase(caseActuelle.getPositionX()+1, caseActuelle.getPositionY());
                 
                 if(caseGauche != null && !caseGauche.isEmpty()) {
-                    if(caseGauche.getUnePiece() instanceof Pion) {
+                    if(caseGauche.getUnePiece() instanceof Pion && caseGauche.getUnePiece().getCouleur() != piece.getCouleur()) {
                         Pion pion = (Pion) caseGauche.getUnePiece();
                         if(pion.canPrisePassant(caseGauche, destination, this.getJoueurActuel())) {
                             this.modele.prisePassant(caseGauche, destination, piece);
@@ -72,7 +72,7 @@ public class Controller {
                 }
                 
                 if(caseDroite != null && !caseDroite.isEmpty()) {
-                    if(caseDroite.getUnePiece() instanceof Pion) {
+                    if(caseDroite.getUnePiece() instanceof Pion && caseDroite.getUnePiece().getCouleur() != piece.getCouleur()) {
                         Pion pion = (Pion) caseDroite.getUnePiece();
                         if(pion.canPrisePassant(caseDroite, destination, this.getJoueurActuel())) {
                             this.modele.prisePassant(caseDroite, destination, piece);

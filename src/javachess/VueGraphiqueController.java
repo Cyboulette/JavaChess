@@ -74,19 +74,19 @@ public class VueGraphiqueController extends AbstractVueGraphiqueController imple
                     if(!caseC.isEmpty() && caseC.getUnePiece().getCouleur() == this.getController().getJoueurActuel()) {
                             isPieceClicked = true;
                             pieceClicked = caseC.getUnePiece();
+                            
+                            if(source.getUserData() != null) {
+                                String imageName = source.getUserData().toString();
+                                imageName = imageName.substring(0, imageName.length()-1);
+                                source.setEffect(new ImageInput(new Image("hover/"+imageName+".png")));
+                            }
+                            
                             imageClicked = source.getImage();
-                            ColorAdjust effect = new ColorAdjust();
-                            effect.setSaturation(1);
-                            effect.setHue(1);
-                            if(caseC.getUnePiece().getCouleur() == 1) effect.setBrightness(-0.5);
-                            if(caseC.getUnePiece().getCouleur() == 2) effect.setBrightness(0.5);
-                            source.setEffect(effect);
                             
                             ArrayList<Case> deplacements = controller.getDeplacements(pieceClicked);
                             if(deplacements.size() > 0) {
                                 for(Case c : deplacements) {
                                     ImageView caseImgView = this.getCaseImageViewAtCoord(c.getPositionX(), c.getPositionY());
-                                    //caseImgView.setEffect(effectCaseAvaiable);
                                     if(caseImgView.getUserData().equals("blanche")) {
                                         caseImgView.setEffect(new ImageInput(new Image("case_verte_1.png")));
                                     } else if(caseImgView.getUserData().equals("noire")) {
@@ -176,19 +176,6 @@ public class VueGraphiqueController extends AbstractVueGraphiqueController imple
         pionController.getStage().close();
     }
     
-    private void onClickCase(MouseEvent e) {
-        /*if(isPieceClicked) {
-            if(e.getSource() instanceof ImageView) {
-                ImageView source = (ImageView) e.getSource();
-                String typeCase = source.getUserData().toString();
-                if(typeCase.equals("noire") || typeCase.equals("blanche")) {
-                    Case caseC = this.controller.getCase((int) source.getLayoutX()/44, (int) source.getLayoutY()/44);
-                    this.controller.play(pieceClicked, caseC);
-                }
-            }
-        }*/
-    }
-    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         this.piecesImages = new ArrayList<ImageView>();
@@ -204,16 +191,11 @@ public class VueGraphiqueController extends AbstractVueGraphiqueController imple
         double currentX = 0;
         double currentY = 0;
         double compte8 = 0;
-        boolean startWithBlanc = true; // Start with blanc = 1 true, noir = 0 false
+        boolean startWithBlanc = true; // On commence avec blanc = 1 true, noir = 0 false
         
         //Creating the mouse event handler 
         EventHandler<MouseEvent> eventClickPiece = (MouseEvent e) -> {
             this.onClickPiece(e);
-        };
-        
-        //Creating the mouse event handler 
-        EventHandler<MouseEvent> eventClickCase = (MouseEvent e) -> {
-            this.onClickCase(e);
         };
         
         for(int i = 0; i < 64; i++) {
@@ -250,10 +232,6 @@ public class VueGraphiqueController extends AbstractVueGraphiqueController imple
             imgView.setLayoutX(currentX);
             imgView.setLayoutY(currentY);
             
-            imgView.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-                this.onClickCase(event);
-            });
-            
             if(!casesImages.contains(imgView)) casesImages.add(imgView);
             contentCases.getChildren().add(imgView);
             
@@ -288,6 +266,7 @@ public class VueGraphiqueController extends AbstractVueGraphiqueController imple
                         imgV.setLayoutY(44);
                         imgV.setPickOnBounds(true);
                         imgV.addEventHandler(MouseEvent.MOUSE_CLICKED, eventClickPiece);
+                        imgV.setUserData("pionN");
                         this.piecesImages.add(imgV);
                         contentCases.getChildren().add(imgV);
                     }
@@ -299,6 +278,7 @@ public class VueGraphiqueController extends AbstractVueGraphiqueController imple
                         imgV.setLayoutY(264);
                         imgV.setPickOnBounds(true);
                         imgV.addEventHandler(MouseEvent.MOUSE_CLICKED, eventClickPiece);
+                        imgV.setUserData("pionB");
                         this.piecesImages.add(imgV);
                         contentCases.getChildren().add(imgV);
                     }                   
@@ -313,6 +293,7 @@ public class VueGraphiqueController extends AbstractVueGraphiqueController imple
                         imgV.setLayoutY(y*44);
                         imgV.setPickOnBounds(true);
                         imgV.addEventHandler(MouseEvent.MOUSE_CLICKED, eventClickPiece);
+                        imgV.setUserData("tourN");
                         this.piecesImages.add(imgV);
                         contentCases.getChildren().add(imgV);
                     }
@@ -324,6 +305,7 @@ public class VueGraphiqueController extends AbstractVueGraphiqueController imple
                         imgV.setLayoutY(y*44);
                         imgV.setPickOnBounds(true);
                         imgV.addEventHandler(MouseEvent.MOUSE_CLICKED, eventClickPiece);
+                        imgV.setUserData("tourB");
                         this.piecesImages.add(imgV);
                         contentCases.getChildren().add(imgV);
                     }                 
@@ -338,6 +320,7 @@ public class VueGraphiqueController extends AbstractVueGraphiqueController imple
                         imgV.setLayoutY(y*44);
                         imgV.setPickOnBounds(true);
                         imgV.addEventHandler(MouseEvent.MOUSE_CLICKED, eventClickPiece);
+                        imgV.setUserData("cavalierB");
                         this.piecesImages.add(imgV);
                         contentCases.getChildren().add(imgV);
                     }
@@ -349,6 +332,7 @@ public class VueGraphiqueController extends AbstractVueGraphiqueController imple
                         imgV.setLayoutY(y*44);
                         imgV.setPickOnBounds(true);
                         imgV.addEventHandler(MouseEvent.MOUSE_CLICKED, eventClickPiece);
+                        imgV.setUserData("cavalierN");
                         this.piecesImages.add(imgV);
                         contentCases.getChildren().add(imgV);
                     }
@@ -363,6 +347,7 @@ public class VueGraphiqueController extends AbstractVueGraphiqueController imple
                         imgV.setLayoutY(y*44);
                         imgV.setPickOnBounds(true);
                         imgV.addEventHandler(MouseEvent.MOUSE_CLICKED, eventClickPiece);
+                        imgV.setUserData("fouB");
                         this.piecesImages.add(imgV);
                         contentCases.getChildren().add(imgV);
                     }
@@ -374,6 +359,7 @@ public class VueGraphiqueController extends AbstractVueGraphiqueController imple
                         imgV.setLayoutY(y*44);
                         imgV.setPickOnBounds(true);
                         imgV.addEventHandler(MouseEvent.MOUSE_CLICKED, eventClickPiece);
+                        imgV.setUserData("fouN");
                         this.piecesImages.add(imgV);
                         contentCases.getChildren().add(imgV);
                     }
@@ -388,6 +374,7 @@ public class VueGraphiqueController extends AbstractVueGraphiqueController imple
                         imgV.setLayoutY(y*44);
                         imgV.setPickOnBounds(true);
                         imgV.addEventHandler(MouseEvent.MOUSE_CLICKED, eventClickPiece);
+                        imgV.setUserData("roiN");
                         this.piecesImages.add(imgV);
                         contentCases.getChildren().add(imgV);
                     }
@@ -399,6 +386,7 @@ public class VueGraphiqueController extends AbstractVueGraphiqueController imple
                         imgV.setLayoutY(y*44);
                         imgV.setPickOnBounds(true);
                         imgV.addEventHandler(MouseEvent.MOUSE_CLICKED, eventClickPiece);
+                        imgV.setUserData("roiB");
                         this.piecesImages.add(imgV);
                         contentCases.getChildren().add(imgV);
                     }
@@ -413,6 +401,7 @@ public class VueGraphiqueController extends AbstractVueGraphiqueController imple
                         imgV.setLayoutY(y*44);
                         imgV.setPickOnBounds(true);
                         imgV.addEventHandler(MouseEvent.MOUSE_CLICKED, eventClickPiece);
+                        imgV.setUserData("reineN");
                         this.piecesImages.add(imgV);
                         contentCases.getChildren().add(imgV);
                     }
@@ -424,6 +413,7 @@ public class VueGraphiqueController extends AbstractVueGraphiqueController imple
                         imgV.setLayoutY(y*44);
                         imgV.setPickOnBounds(true);
                         imgV.addEventHandler(MouseEvent.MOUSE_CLICKED, eventClickPiece);
+                        imgV.setUserData("reineB");
                         this.piecesImages.add(imgV);
                         contentCases.getChildren().add(imgV);
                     }
@@ -491,6 +481,8 @@ public class VueGraphiqueController extends AbstractVueGraphiqueController imple
         ImageView imgSource = this.getImageViewAtCoord(source.getPositionX(), source.getPositionY());
         ImageView imgDestination = this.getImageViewAtCoord(destination.getPositionX(), destination.getPositionY());
         if(imgSource != null & imgDestination != null) {
+            imgDestination.setUserData(imgSource.getUserData());
+            imgSource.setUserData(null);
             imgDestination.setImage(imgSource.getImage());
             imgSource.setImage(null);
             imgSource.setEffect(null);
