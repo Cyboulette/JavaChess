@@ -13,6 +13,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.effect.ImageInput;
@@ -27,6 +30,7 @@ import pieces.Cavalier;
 import pieces.Fou;
 import pieces.Piece;
 import pieces.Reine;
+import pieces.Roi;
 import pieces.Tour;
 
 /**
@@ -80,10 +84,6 @@ public class VueGraphiqueController extends AbstractVueGraphiqueController imple
                             
                             ArrayList<Case> deplacements = controller.getDeplacements(pieceClicked);
                             if(deplacements.size() > 0) {
-                                ColorAdjust effectCaseAvaiable = new ColorAdjust();
-                                effectCaseAvaiable.setHue(-0.1);
-                                effectCaseAvaiable.setBrightness(-0.5);
-                                effectCaseAvaiable.setContrast(0.2);
                                 for(Case c : deplacements) {
                                     ImageView caseImgView = this.getCaseImageViewAtCoord(c.getPositionX(), c.getPositionY());
                                     //caseImgView.setEffect(effectCaseAvaiable);
@@ -149,6 +149,9 @@ public class VueGraphiqueController extends AbstractVueGraphiqueController imple
                         ex.printStackTrace();
                     }
                 }
+                /*if(havePlayed) {
+                    this.controller.verifyEchec(joueur, this.controller.getJoueurSuivant());
+                }*/
             }
         }
     }
@@ -484,7 +487,7 @@ public class VueGraphiqueController extends AbstractVueGraphiqueController imple
     }
 
     @Override
-    public void avertir(Piece piece, Case source, Case destination, Boolean aMange) {
+    public void avertir(Piece piece, Case source, Case destination, Boolean aMange) {        
         ImageView imgSource = this.getImageViewAtCoord(source.getPositionX(), source.getPositionY());
         ImageView imgDestination = this.getImageViewAtCoord(destination.getPositionX(), destination.getPositionY());
         if(imgSource != null & imgDestination != null) {
@@ -495,6 +498,14 @@ public class VueGraphiqueController extends AbstractVueGraphiqueController imple
             this.isPieceClicked = false;
             this.pieceClicked = null;
             this.imageClicked = null;
+        }
+        
+        Case menacee = this.controller.verifyEchec(this.controller.getJoueurActuel());
+        Case menacee2 = this.controller.verifyEchec(this.controller.getJoueurSuivant());
+        
+        if(menacee != null || menacee2 != null) {
+            Alert alert = new Alert(AlertType.CONFIRMATION, "Vous êtes en échec !", ButtonType.OK);
+            alert.showAndWait();
         }
         // Commenter cette ligne pour arrêter de voir l'état du jeu
         // System.out.println(this.controller.getEtatJeu());

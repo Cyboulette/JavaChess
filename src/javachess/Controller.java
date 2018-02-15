@@ -92,6 +92,44 @@ public class Controller {
         return havePlayed;
     }
     
+    private Roi getCaseOfRoi(int joueur) {
+        Roi roi = null;
+        for(int i = 0; i<8; i++) {
+            for(int j = 0; j<8; j++) {
+                Case c = this.getCase(i, j);
+                if(!c.isEmpty() && c.getUnePiece().getCouleur() == joueur) {
+                    if(c.getUnePiece() instanceof Roi) {
+                        roi = (Roi) c.getUnePiece();
+                    }
+                }
+            }
+        }
+        return roi;
+    }
+    
+    public Case verifyEchec(int joueur) {
+        Roi roiCourant = getCaseOfRoi(joueur);
+        int joueurSuivant = 0;
+        if(joueur == 1) joueurSuivant = 2;
+        if(joueur == 2) joueurSuivant = 1;
+        Case caseMenacee = null;
+
+        for(int i = 0; i<8; i++) {
+            for(int j = 0; j<8; j++) {
+                Case c = this.getCase(i, j);
+                if(!c.isEmpty()) {
+                    if(c.getUnePiece().getCouleur() != joueur) {
+                        if(c.getUnePiece().canPlay(roiCourant.getCase(), joueurSuivant)) {
+                            caseMenacee = roiCourant.getCase();
+                        }
+                    }
+                }
+            }
+        }
+        
+        return caseMenacee;
+    }
+    
     public void promote(Case destination, Piece piece) {
         destination.setUnePiece(piece);
     }
