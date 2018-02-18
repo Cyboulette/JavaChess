@@ -5,6 +5,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -34,10 +35,11 @@ public class Main extends Application {
             controllerVue.setController(controller);
             model.register(controllerVue);
 
-            Scene scene = new Scene(anchorPane, 340, 368);
-
+            Scene scene = new Scene(anchorPane);
+            
+            stage.setTitle("Notre jeu d'échec");
+            stage.getIcons().add(new Image("icone.png"));
             stage.setScene(scene);
-            stage.setResizable(false);
             stage.show();
         }
         

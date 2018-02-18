@@ -3,6 +3,7 @@ package javachess;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -593,8 +594,14 @@ public class VueGraphiqueController implements Initializable, Observateur {
 
     @Override
     public void avertirFinPartie(int gagnant) {
-        // On quitte le jeu quand on a un gagnant !
-        System.exit(0);
+        String joueur = (gagnant == 1?"Blanc":"Noir");
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("Fin de partie");
+        alert.setHeaderText("Le roi a été mangé !");
+        alert.setContentText("Le joueur "+joueur+" a gagné la partie !");
+
+        alert.showAndWait(); // On affiche la modale
+        this.nouvellePartie(); // On force la nouvelle partie
     }
     
 }

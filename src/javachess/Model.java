@@ -2,6 +2,7 @@ package javachess;
 
 import java.util.ArrayList;
 import pieces.Piece;
+import pieces.Roi;
 
 public class Model {
     
@@ -59,6 +60,10 @@ public class Model {
             this.changerJoueur();
             this.avertirAllObservateurs(piece, source, destination, aMange, pieceMangee); // On avertit tout le monde
             source.setUnePiece(null);
+            
+            if(aMange && pieceMangee instanceof Roi) {
+                this.avertirFinPartieAllObservateurs(joueurActuel);
+            }
         }
     }
     

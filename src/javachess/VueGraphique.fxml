@@ -5,11 +5,11 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" fx:id="root" prefHeight="377.0" prefWidth="352.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javachess.VueGraphiqueController">
+<AnchorPane id="AnchorPane" fx:id="root" prefHeight="377.0" prefWidth="352.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javachess.VueGraphiqueController">
    <children>
-      <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="352.0">
+      <MenuBar id="menu-bar" layoutY="2.0" prefHeight="25.0" prefWidth="287.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <menus>
-          <Menu mnemonicParsing="false" text="Fichier">
+          <Menu mnemonicParsing="false" text="Partie">
             <items>
                 <MenuItem mnemonicParsing="false" onAction="#nouvellePartie" text="Nouvelle Partie" />
                 <MenuItem mnemonicParsing="false" onAction="#showAide" text="Aide : Activée" />
@@ -18,6 +18,6 @@
           </Menu>
         </menus>
       </MenuBar>
-      <AnchorPane fx:id="contentCases" layoutY="27.0" prefHeight="352.0" prefWidth="352.0" />
+      <AnchorPane fx:id="contentCases" layoutY="27.0" prefHeight="352.0" prefWidth="352.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="25.0" />
    </children>
 </AnchorPane>

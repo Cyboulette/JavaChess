@@ -30,12 +30,13 @@ public class Controller {
     public boolean play(Piece piece, Case destination) {
         boolean canPlay = true; // Par défaut on peut jouer
         boolean havePlayed = false; // Par défaut on a pas encore joué
+        boolean bloquerCoupSpecial = false;
         
         // On demande à la pièce si elle peut jouer sur la destination ou on clique
         canPlay = piece.canPlay(destination, this.getJoueurActuel());
         
         // Si on bouge notre Roi
-        if(piece instanceof Roi) {
+        if(!bloquerCoupSpecial && piece instanceof Roi) {
             Roi roi = (Roi) piece;
             // Et que la destination est non vide et qu'on veut se déplacer sur notre Tour
             if(!destination.isEmpty() && destination.getUnePiece() instanceof Tour) {
@@ -53,7 +54,7 @@ public class Controller {
         }
         
         // Si on bouge un de nos Pions
-        if(piece instanceof Pion){
+        if(!bloquerCoupSpecial && piece instanceof Pion){
             // Que notre destination est vide (c'est une case vide)
             if(destination.isEmpty()){
                 Case caseActuelle = piece.getCase();
@@ -107,12 +108,13 @@ public class Controller {
             
             // On vérifie alors si un des rois est en échec poucr nous ou pour un autre joueur
             // avertirEchecAllOBservateurs prend la couleur du roi potentiel en échec et s'il est en échec ou non.
-            if(this.verifyEchecNoir(this.getJoueurActuel()) || this.verifyEchecNoir(this.getJoueurSuivant())) {
+            if(this.verifyEchec(this.getJoueurActuel(), 2) || this.verifyEchec(this.getJoueurSuivant(), 2)) {
                 this.modele.avertirEchecAllOservateurs(2, true);
             } else {
                 this.modele.avertirEchecAllOservateurs(2, false);
             }
-            if(this.verifyEchecBlanc(this.getJoueurActuel()) || this.verifyEchecBlanc(this.getJoueurSuivant())) {
+            
+            if(this.verifyEchec(this.getJoueurActuel(), 1) || this.verifyEchec(this.getJoueurSuivant(), 1)) {
                 this.modele.avertirEchecAllOservateurs(1, true);
             } else {
                 this.modele.avertirEchecAllOservateurs(1, false);
@@ -123,20 +125,13 @@ public class Controller {
         return havePlayed;
     }
     
-    // Permet de récupérer le roiBlanc est de vérifier s'il est en échec
-    public boolean verifyEchecBlanc(int joueur) {
-        Roi roiBlanc = (Roi) this.modele.getPlateau().getRoiBlanc();
-        if(roiBlanc.estEnEchec(joueur)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-    
-    // Permet de récupérer le roiNoir est de vérifier s'il est en échec
-    public boolean verifyEchecNoir(int joueur) {
-        Roi roiNoir = (Roi) this.modele.getPlateau().getRoiNoir();
-        if(roiNoir.estEnEchec(joueur)) {
+    // Permet de vérifier qu'un roi (noir ou blanc) est en échec
+    public boolean verifyEchec(int joueur, int couleur) {
+        Roi roi = null;
+        if(couleur == 1) roi = (Roi) this.modele.getPlateau().getRoiBlanc();
+        if(couleur == 2) roi = (Roi) this.modele.getPlateau().getRoiNoir();
+        
+        if(roi != null && roi.estEnEchec(joueur)) {
             return true;
         } else {
             return false;
@@ -146,6 +141,17 @@ public class Controller {
     // La promotion consiste simplement à remplacer une case par une nouvelle pièce
     public void promote(Case destination, Piece piece) {
         destination.setUnePiece(piece);
+        if(this.verifyEchec(this.getJoueurActuel(), 2) || this.verifyEchec(this.getJoueurSuivant(), 2)) {
+            this.modele.avertirEchecAllOservateurs(2, true);
+        } else {
+            this.modele.avertirEchecAllOservateurs(2, false);
+        }
+
+        if(this.verifyEchec(this.getJoueurActuel(), 1) || this.verifyEchec(this.getJoueurSuivant(), 1)) {
+            this.modele.avertirEchecAllOservateurs(1, true);
+        } else {
+            this.modele.avertirEchecAllOservateurs(1, false);
+        }
     }
     
     /** GETTERS **/

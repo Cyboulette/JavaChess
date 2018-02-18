@@ -25,7 +25,9 @@ public class VueConsole implements Observateur {
 
     @Override
     public void avertirFinPartie(int gagnant) {
-        System.out.println("La partie est terminée ! ...");
+        String joueur = (gagnant == 1 ? "blanc":"noir");
+        System.out.println("La partie est terminée ! ... Et c'est le joueur " + joueur+" qui a gagné !");
+        System.out.println("\r\n");
     }
 
     @Override

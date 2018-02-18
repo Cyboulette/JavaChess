@@ -43,10 +43,9 @@ public class PromotionPionController implements Initializable {
         // Quand on "hover" sur une pièce, on la passe en "orange" avec un effet
         if(e.getTarget() instanceof ImageView) {
             ImageView imgv = (ImageView) e.getTarget();
-            ColorAdjust effect = new ColorAdjust();
-            effect.setSaturation(0.5);
-            effect.setHue(0.2);
-            imgv.setEffect(effect);
+            String imageName = imgv.getUserData().toString();
+            imageName = imageName.substring(0, imageName.length()-1);
+            imgv.setEffect(new ImageInput(new Image("hover/"+imageName+".png")));
         }
     }
     
@@ -70,14 +69,22 @@ public class PromotionPionController implements Initializable {
     public void updateImages() {
         if(this.joueurActuel == 1) {
             fou.setImage(new Image("fouB.png"));
+            fou.setUserData("fouB");
             tour.setImage(new Image("tourB.png"));
+            tour.setUserData("tourB");
             reine.setImage(new Image("reineB.png"));
+            reine.setUserData("reineB");
             cavalier.setImage(new Image("cavalierB.png"));
+            cavalier.setUserData("cavalierB");
         } else if(this.joueurActuel == 2) {
             fou.setImage(new Image("fouN.png"));
+            fou.setUserData("fouN");
             tour.setImage(new Image("tourN.png"));
+            tour.setUserData("tourN");
             reine.setImage(new Image("reineN.png"));
+            reine.setUserData("reineN");
             cavalier.setImage(new Image("cavalierN.png"));
+            cavalier.setUserData("cavalierN");
         }
     }
     
