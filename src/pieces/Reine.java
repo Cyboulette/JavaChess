@@ -4,12 +4,10 @@ import java.util.ArrayList;
 import javachess.Case;
 import javachess.Plateau;
 
-/**
- *
- * @author ahertel
- */
 public class Reine extends Piece{
     
+    // Permet de savoir s'il y a une pièce entre nous et notre destination
+    // Doit tester les diagonales et les axes X/Y
     private boolean isPieceBetween(Case actuelle, Case destination, int joueurActuel) {
         int startX = Math.min(actuelle.getPositionX(), destination.getPositionX());
         int startY = Math.min(actuelle.getPositionY(), destination.getPositionY());

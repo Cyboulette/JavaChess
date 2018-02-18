@@ -4,10 +4,6 @@ import java.util.ArrayList;
 import javachess.Case;
 import javachess.Plateau;
 
-/**
- *
- * @author ahertel
- */
 public class Pion extends Piece{
     private boolean alreadyPlay = false;
     private boolean firstDeplacementIsTwo = false;
@@ -18,6 +14,7 @@ public class Pion extends Piece{
         this.setCase(destination);
     }
     
+    // Permet de vérifier qu'il n'y a aucune pièce/pion entre là ou on veut aller et là ou on est
     private boolean isPieceBetween(Case actuelle, Case destination, int joueurActuel) {
         int startY = Math.min(actuelle.getPositionY(), destination.getPositionY());
         int endY = Math.max(actuelle.getPositionY(), destination.getPositionY());
@@ -40,12 +37,28 @@ public class Pion extends Piece{
         }
     }
     
+    // Détermine si on peut prendre en passant ou non
     public boolean canPrisePassant(Case caseGD, Case destination, int joueurActuel) {
+        // Si on est blanc et qu'on descend en diagonale ou que si on est noir et qu'on descend en diagonale
         if(((joueurActuel == 1 && destination.getPositionY() == caseGD.getPositionY()-1) ||
             (joueurActuel == 2 && destination.getPositionY() == caseGD.getPositionY()+1)) && 
             destination.getPositionX() == caseGD.getPositionX()) {
             Pion pion = (Pion) caseGD.getUnePiece();
-            return pion.getFirstDeplacementIsTwo();
+            
+            // Pour les pions blancs la prise en passant ne peut se faire que sur Y = 4
+            // Il faut aussi vérifier que le 1er déplacement du pion était de 2 !
+            if(pion.getCouleur() == 1 && caseGD.getPositionY() == 4 && pion.firstDeplacementIsTwo) {
+                return true;
+            }
+            
+            // Pour les pions noirs la prise en passant ne peut se faire que sur Y = 3
+            // Il faut aussi vérifier que le 1er déplacement du pion était de 2 !
+            if(pion.getCouleur() == 2 && caseGD.getPositionY() == 3 && pion.firstDeplacementIsTwo) {
+                return true;
+            }
+            
+            // Par défaut on retourne faux
+            return false;
         } else {
             return false;
         }
@@ -57,12 +70,6 @@ public class Pion extends Piece{
         int differencePos = Math.abs(caseActuelle.getPositionY() - destination.getPositionY()); // On récupère la distance peu importe le sens
         int maxX = 2; // Si on a jamais joué on peut faire 1 ou 2
         if(alreadyPlay) maxX = 1; // Si on a déjà joué, le maximum est de 1
-        
-        if(maxX == 2 && !alreadyPlay) {
-            firstDeplacementIsTwo = true;
-        } else {
-            firstDeplacementIsTwo = false;
-        }
         
         // Si la destination est vide (case vide) et qu'on change de colonne (diagonale ou autre), on empèche de jouer
         if(destination.isEmpty() && destination.getPositionX() != caseActuelle.getPositionX()) {
@@ -108,5 +115,13 @@ public class Pion extends Piece{
     
     public boolean getFirstDeplacementIsTwo() {
         return this.firstDeplacementIsTwo;
+    }
+    
+    public void setFirstDeplacementIsTwo(boolean bool) {
+        this.firstDeplacementIsTwo = bool;
+    }
+    
+    public boolean getAlreadyPlay() {
+        return this.alreadyPlay;
     }
 }

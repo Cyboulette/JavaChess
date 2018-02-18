@@ -46,7 +46,15 @@ public class Case {
         return positionY;
     }
     
+    /**
+     * @return the plateau
+     */
     public Plateau getPlateau() {
         return this.plateau;
+    }
+    
+    // Affiche la position
+    public String toString() {
+        return this.getPositionX()+";"+this.getPositionY();
     }
 }

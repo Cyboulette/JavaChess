@@ -4,12 +4,10 @@ import java.util.ArrayList;
 import javachess.Case;
 import javachess.Plateau;
 
-/**
- *
- * @author ahertel
- */
 public class Fou extends Piece {
    
+    // Permet de vérifier qu'il n'y a aucune pièce entre l à ou on est et là ou on veut aller
+    // Doit tester les diagonales
     private boolean isPieceBetween(Case actuelle, Case destination, int joueurActuel) {
         int startX = Math.min(actuelle.getPositionX(), destination.getPositionX());
         int startY = Math.min(actuelle.getPositionY(), destination.getPositionY());
@@ -40,7 +38,6 @@ public class Fou extends Piece {
             return false;
         }
     }
-    
     @Override
     public boolean canPlay(Case destination, int joueurActuel) {
         Case caseActuelle = this.getCase();  // On récupère la case actuelle

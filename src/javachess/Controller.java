@@ -3,10 +3,6 @@ package javachess;
 import java.util.ArrayList;
 import pieces.*;
 
-/**
- *
- * @author Quentin
- */
 public class Controller {
     private Model modele;
     
@@ -14,63 +10,75 @@ public class Controller {
         this.modele = modele;
     }
     
-    public Case getCase(int x, int y) {
-        return this.modele.getPlateau().getCase(x, y);
-    }
-    
+    // Retourne true si la pièce doit être promue, false sinon
     public boolean needToPromote(Piece piece, Case destination, int joueur) {
+        // Si la pièce est un Pion
         if(piece instanceof Pion) {
+            // Si le joueur est blanc et qu'on arrive sur la ligne du haut (0) OU
+            // Si le joueur est noir et qu'on arrive sur la ligne du bas (7)
             if((joueur == 1 && destination.getPositionY() == 0) || (joueur == 2 && destination.getPositionY() == 7)) {
-                return true;
+                return true; // On doit promettre
             } else {
-                return false;
+                return false; // Sinon on ne promet rien
             }
         } else {
+            // On ne promet pas si ce n'était pas un pion
             return false;
         }
     }
     
     public boolean play(Piece piece, Case destination) {
-        boolean canPlay = true;
-        boolean havePlayed = false;
-        if(!destination.isEmpty() && destination.getUnePiece().getCouleur() == piece.getCouleur()) {
-            canPlay = false;
-        }
+        boolean canPlay = true; // Par défaut on peut jouer
+        boolean havePlayed = false; // Par défaut on a pas encore joué
         
+        // On demande à la pièce si elle peut jouer sur la destination ou on clique
         canPlay = piece.canPlay(destination, this.getJoueurActuel());
         
+        // Si on bouge notre Roi
         if(piece instanceof Roi) {
             Roi roi = (Roi) piece;
+            // Et que la destination est non vide et qu'on veut se déplacer sur notre Tour
             if(!destination.isEmpty() && destination.getUnePiece() instanceof Tour) {
+                // Qui est donc de la mêm ecouleur que nous
                 if(piece.getCouleur() == destination.getUnePiece().getCouleur()) {
+                    // ça veut dire qu'on essaye de Roquer, on demande au modèle si c'est vraiment possible
                     if(roi.canRoque(piece.getCase(), destination)) {
+                        // Si ça l'est, on effectue le roque
                         this.modele.doRoque(piece.getCase(), destination);
-                        havePlayed = true;
-                        canPlay = false;
+                        havePlayed = true; // On a joué
+                        canPlay = false; // Mais on ne peut pas réellement "jouer"
                     }
                 }
             }
         }
         
+        // Si on bouge un de nos Pions
         if(piece instanceof Pion){
+            // Que notre destination est vide (c'est une case vide)
             if(destination.isEmpty()){
                 Case caseActuelle = piece.getCase();
                 Case caseGauche = null;
                 Case caseDroite = null;
+                // On récupère alors la case à gauche de nous et à droite de nous en retirant les bords du plateau.
                 if(caseActuelle.getPositionX() != 0) caseGauche = this.getCase(caseActuelle.getPositionX()-1, caseActuelle.getPositionY());
                 if(caseActuelle.getPositionX() != 7) caseDroite = this.getCase(caseActuelle.getPositionX()+1, caseActuelle.getPositionY());
                 
+                // Si la case de gauche existe et qu'elle n'est pas vide
                 if(caseGauche != null && !caseGauche.isEmpty()) {
+                    // Que c'est aussi un pion et qu'il est d'une couleur différente de nous
                     if(caseGauche.getUnePiece() instanceof Pion && caseGauche.getUnePiece().getCouleur() != piece.getCouleur()) {
                         Pion pion = (Pion) caseGauche.getUnePiece();
+                        // ça veut dire qu'on essaye de prendre en passant, on vérifie si c'est réllement possible
                         if(pion.canPrisePassant(caseGauche, destination, this.getJoueurActuel())) {
+                            // Si c'est possible on le fait au modèle
                             this.modele.prisePassant(caseGauche, destination, piece);
-                            havePlayed = true;
-                            canPlay = false;
+                            havePlayed = true; // On a joué
+                            canPlay = false; // Mais on ne peut pas réellement "jouer"
                         }
                     }
                 }
                 
+                // Pareil qu'au dessus mais pour la case à droite
                 if(caseDroite != null && !caseDroite.isEmpty()) {
                     if(caseDroite.getUnePiece() instanceof Pion && caseDroite.getUnePiece().getCouleur() != piece.getCouleur()) {
                         Pion pion = (Pion) caseDroite.getUnePiece();
@@ -84,56 +92,63 @@ public class Controller {
             }
         }
         
+        // Si on peut "jouer" un mouvement "classique" (pas de Roque, pas de prisePassant)
         if(canPlay) {
-            havePlayed = true;
+            havePlayed = true; // On indique qu'on a joué
+            // Si la pièce qu'on déplace est un pion
+            if(piece instanceof Pion) {
+                int difference = Math.abs(piece.getCase().getPositionY() - destination.getPositionY());
+                // Si elle n'a jamais jouée, et qu'elle se déplace de 2, on indique que son premier déplacement est de 2
+                if(!((Pion)piece).getAlreadyPlay() && difference == 2) ((Pion) piece).setFirstDeplacementIsTwo(true);
+            }
+            
+            // On demande au modèle de jouer notre pièce sur la destination
             this.modele.play(piece, destination);
+            
+            // On vérifie alors si un des rois est en échec poucr nous ou pour un autre joueur
+            // avertirEchecAllOBservateurs prend la couleur du roi potentiel en échec et s'il est en échec ou non.
+            if(this.verifyEchecNoir(this.getJoueurActuel()) || this.verifyEchecNoir(this.getJoueurSuivant())) {
+                this.modele.avertirEchecAllOservateurs(2, true);
+            } else {
+                this.modele.avertirEchecAllOservateurs(2, false);
+            }
+            if(this.verifyEchecBlanc(this.getJoueurActuel()) || this.verifyEchecBlanc(this.getJoueurSuivant())) {
+                this.modele.avertirEchecAllOservateurs(1, true);
+            } else {
+                this.modele.avertirEchecAllOservateurs(1, false);
+            }
         }
         
+        // On a besoin de retourner si on a joué ou non (pour la promotion)
         return havePlayed;
     }
     
-    private Roi getCaseOfRoi(int joueur) {
-        Roi roi = null;
-        for(int i = 0; i<8; i++) {
-            for(int j = 0; j<8; j++) {
-                Case c = this.getCase(i, j);
-                if(!c.isEmpty() && c.getUnePiece().getCouleur() == joueur) {
-                    if(c.getUnePiece() instanceof Roi) {
-                        roi = (Roi) c.getUnePiece();
-                    }
-                }
-            }
+    // Permet de récupérer le roiBlanc est de vérifier s'il est en échec
+    public boolean verifyEchecBlanc(int joueur) {
+        Roi roiBlanc = (Roi) this.modele.getPlateau().getRoiBlanc();
+        if(roiBlanc.estEnEchec(joueur)) {
+            return true;
+        } else {
+            return false;
         }
-        return roi;
     }
     
-    public Case verifyEchec(int joueur) {
-        Roi roiCourant = getCaseOfRoi(joueur);
-        int joueurSuivant = 0;
-        if(joueur == 1) joueurSuivant = 2;
-        if(joueur == 2) joueurSuivant = 1;
-        Case caseMenacee = null;
-
-        for(int i = 0; i<8; i++) {
-            for(int j = 0; j<8; j++) {
-                Case c = this.getCase(i, j);
-                if(!c.isEmpty()) {
-                    if(c.getUnePiece().getCouleur() != joueur) {
-                        if(c.getUnePiece().canPlay(roiCourant.getCase(), joueurSuivant)) {
-                            caseMenacee = roiCourant.getCase();
-                        }
-                    }
-                }
-            }
+    // Permet de récupérer le roiNoir est de vérifier s'il est en échec
+    public boolean verifyEchecNoir(int joueur) {
+        Roi roiNoir = (Roi) this.modele.getPlateau().getRoiNoir();
+        if(roiNoir.estEnEchec(joueur)) {
+            return true;
+        } else {
+            return false;
         }
-        
-        return caseMenacee;
     }
     
+    // La promotion consiste simplement à remplacer une case par une nouvelle pièce
     public void promote(Case destination, Piece piece) {
         destination.setUnePiece(piece);
     }
     
+    /** GETTERS **/
     public ArrayList<Case> getDeplacements(Piece piece) {
         return piece.getDeplacements(this.getJoueurActuel());
     }
@@ -150,53 +165,16 @@ public class Controller {
         return this.modele.getJoueurSuivant();
     }
     
-    public String getEtatJeu() {
-        String retour = "";
-        ArrayList<Piece> piecesBlanc = new ArrayList<Piece>();
-        ArrayList<Piece> piecesNoir = new ArrayList<Piece>();
-        ArrayList<Case> lesCases = this.modele.getPlateau().getLesCases();
-        for(Case c : lesCases) {
-            if(!c.isEmpty()) {
-                Piece p = c.getUnePiece();
-                if(p.getCouleur() == 1 && !piecesBlanc.contains(p)) piecesBlanc.add(p);
-                if(p.getCouleur() == 2 && !piecesNoir.contains(p)) piecesNoir.add(p);
-            }
-        }
-        System.out.println(piecesBlanc.size()+" pièces blanches totales");
-        System.out.println(piecesNoir.size()+" pièces noires totales");
-        int nbPionsBlancs = 0;
-        int nbPionsNoirs = 0;
-        int nbToursBlancs = 0;
-        int nbToursNoirs = 0;
-        int nbReineBlanc = 0;
-        int nbReineNoir = 0;
-        int nbRoiBlanc = 0;
-        int nbRoiNoir = 0;
-        int nbFousBlancs = 0;
-        int nbFousNoirs = 0;
-        int nbCavaliersBlancs = 0;
-        int nbCavaliersNoirs = 0;
-        
-        for(Piece p : piecesBlanc) {
-            if(p instanceof Pion) nbPionsBlancs++;
-            if(p instanceof Cavalier) nbCavaliersBlancs++;
-            if(p instanceof Fou) nbFousBlancs++;
-            if(p instanceof Roi) nbRoiBlanc++;
-            if(p instanceof Reine) nbReineBlanc++;
-            if(p instanceof Tour) nbToursBlancs++;
-        }
-        
-        for(Piece p : piecesNoir) {
-            if(p instanceof Pion) nbPionsNoirs++;
-            if(p instanceof Cavalier) nbCavaliersNoirs++;
-            if(p instanceof Fou) nbFousNoirs++;
-            if(p instanceof Roi) nbRoiNoir++;
-            if(p instanceof Reine) nbReineNoir++;
-            if(p instanceof Tour) nbToursNoirs++;
-        }
-        retour = "Blancs = \nPions : "+nbPionsBlancs+"\nCavaliers : "+nbCavaliersBlancs+"\nFous : "+nbFousBlancs+"\nTours : "+nbToursBlancs+"\nRoi : "+nbRoiBlanc+"\nReine : "+nbReineBlanc;
-        retour += "\n\nNoirs = \nPions : "+nbPionsNoirs+"\nCavaliers : "+nbCavaliersNoirs+"\nFous : "+nbFousNoirs+"\nTours : "+nbToursNoirs+"\nRoi : "+nbRoiNoir+"\nReine : "+nbReineNoir;
-        
-        return null;
+    public Piece getRoiBlanc() {
+        return this.modele.getPlateau().getRoiBlanc();
+    }
+    
+    public Piece getRoiNoir() {
+        return this.modele.getPlateau().getRoiNoir();
+    }
+    
+    // Permet de retourner la case du plateau aux coordonnées X & Y
+    public Case getCase(int x, int y) {
+        return this.modele.getPlateau().getCase(x, y);
     }
 }

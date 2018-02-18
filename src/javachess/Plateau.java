@@ -1,39 +1,40 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package javachess;
 
 import java.util.ArrayList;
 import pieces.*;
 
-/**
- *
- * @author ahertel
- */
 public class Plateau {
     
+    private Piece roiBlanc;
+    private Piece roiNoir;
     private ArrayList<Case> lesCases;
     
     public Plateau(){
+        roiBlanc = null;
+        roiNoir = null;
         lesCases = new ArrayList<Case>();
     }
     
+    // Permet de retourner la case en position x;y
     public Case getCase(int x, int y) {
         Case caseTrouvee = null;
         int i = 0;
-        while(caseTrouvee == null) {
-            Case c = lesCases.get(i);
-            if(c.getPositionX() == x && c.getPositionY() == y) {
-                caseTrouvee = c;
+        try {
+            while(caseTrouvee == null) {
+                Case c = lesCases.get(i);
+                if(c.getPositionX() == x && c.getPositionY() == y) {
+                    caseTrouvee = c;
+                }
+                i++;
             }
-            i++;
+        } catch(IndexOutOfBoundsException e) {
+            caseTrouvee = null;
         }
         
         return caseTrouvee;
     }
     
+    // permet d'init le plateau de jeu
     public void initBoarder(){
         Case uneCase; 
         Tour uneT = new Tour();
@@ -110,23 +111,29 @@ public class Plateau {
                     if(y==0){
                         unR = new Roi();
                         unR.setCouleur(2);
+                        roiNoir = unR;
                     }
                     else{
                         unR = new Roi();
                         unR.setCouleur(1);
+                        roiBlanc = unR;
                     }
                     uneCase.setUnePiece(unR);
                 }
-                
-                
             }
         }
-    
-
     }
     
     public ArrayList<Case> getLesCases() {
         return this.lesCases;
+    }
+    
+    public Piece getRoiBlanc() {
+        return this.roiBlanc;
+    }
+    
+    public Piece getRoiNoir() {
+        return this.roiNoir;
     }
     
 }

@@ -13,10 +13,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import pieces.Piece;
 
-/**
- *
- * @author qdesbin
- */
 public class PromotionPionController implements Initializable {
 
     @FXML
@@ -40,10 +36,11 @@ public class PromotionPionController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
+        // On a rien a faire de spécial pour cette vue
     }
     
     public void onMouseEntered(MouseEvent e) {
+        // Quand on "hover" sur une pièce, on la passe en "orange" avec un effet
         if(e.getTarget() instanceof ImageView) {
             ImageView imgv = (ImageView) e.getTarget();
             ColorAdjust effect = new ColorAdjust();
@@ -54,18 +51,22 @@ public class PromotionPionController implements Initializable {
     }
     
     public void onMouseExited(MouseEvent e) {
+        // Quand on quitte le hover, on retire l'effet
         if(e.getTarget() instanceof ImageView) {
             ImageView imgv = (ImageView) e.getTarget();
             imgv.setEffect(null);
         }
     }
     
+    // Quand on clique sur la pièce choisie pour la promotion
     public void onPieceClicked(MouseEvent e) {
         if(e.getTarget() instanceof ImageView) {
+            // On l'indique au controleur graphique parent
             this.parentController.promotePiece(((ImageView) e.getTarget()).getId(), this);
         }
     }
     
+    // On met à jour les images en fonction de si c'est une pièce blanche ou noire qu'on doit promettre
     public void updateImages() {
         if(this.joueurActuel == 1) {
             fou.setImage(new Image("fouB.png"));

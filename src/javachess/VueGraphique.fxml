@@ -5,14 +5,15 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" prefHeight="377.0" prefWidth="352.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javachess.VueGraphiqueController">
+<AnchorPane id="AnchorPane" fx:id="root" prefHeight="377.0" prefWidth="352.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javachess.VueGraphiqueController">
    <children>
       <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="352.0">
         <menus>
           <Menu mnemonicParsing="false" text="Fichier">
             <items>
-              <MenuItem mnemonicParsing="false" onAction="#nouvellePartie" text="Nouvelle Partie" />
-              <MenuItem mnemonicParsing="false" text="Fermer" />
+                <MenuItem mnemonicParsing="false" onAction="#nouvellePartie" text="Nouvelle Partie" />
+                <MenuItem mnemonicParsing="false" onAction="#showAide" text="Aide : Activée" />
+                <MenuItem mnemonicParsing="false" onAction="#quitter" text="Quitter" />
             </items>
           </Menu>
         </menus>

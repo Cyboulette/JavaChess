@@ -1,23 +1,18 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package pieces;
 
 import java.util.ArrayList;
 import javachess.Case;
 import javachess.Plateau;
 
-/**
- *
- * @author ahertel
- */
 public class Tour extends Piece {
     
+    // Permet de savoir s'il y a une pièce entre nous et notre destination
+    // Doit tester les axes X/Y
     private boolean isPieceBetween(Case actuelle, Case destination, int joueurActuel) {
         int start = 0, end = 0;
         boolean isMovementX = true;
+        
+        // On détermine si on se déplace sur X ou sur Y
         if(actuelle.getPositionX() != destination.getPositionX()) {
             start = Math.min(actuelle.getPositionX(), destination.getPositionX());
             end = Math.max(actuelle.getPositionX(), destination.getPositionX());

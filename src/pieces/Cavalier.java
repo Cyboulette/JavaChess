@@ -3,10 +3,6 @@ package pieces;
 import java.util.ArrayList;
 import javachess.Case;
 
-/**
- *
- * @author ahertel
- */
 public class Cavalier extends Piece{
 
     @Override
